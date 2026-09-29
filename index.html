@@ -1,0 +1,2556 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Vườn Nho Của Cáo</title>
+
+<style>
+
+/* =========================================================
+   CƠ BẢN
+========================================================= */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: Georgia, "Times New Roman", serif;
+    background: #120d18;
+    color: #fff;
+    overflow-x: hidden;
+}
+
+button {
+    font-family: inherit;
+}
+
+.hidden {
+    display: none !important;
+}
+
+
+/* =========================================================
+   NỀN CHUNG
+========================================================= */
+
+#app {
+    min-height: 100vh;
+    position: relative;
+}
+
+.screen {
+    min-height: 100vh;
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+
+/* =========================================================
+   CẢNH MỞ ĐẦU
+========================================================= */
+
+#home {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+
+    background:
+        linear-gradient(
+            rgba(20, 8, 18, 0.25),
+            rgba(20, 8, 18, 0.55)
+        ),
+        url("assets/background.jpg");
+
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+}
+
+#home::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+
+    background:
+        radial-gradient(
+            circle at center,
+            rgba(255,255,255,.12),
+            transparent 35%
+        );
+
+    pointer-events: none;
+}
+
+.home-content {
+    width: min(1000px, 90%);
+    position: relative;
+    z-index: 5;
+    padding: 40px 20px;
+}
+
+.home-title {
+    font-size: clamp(42px, 7vw, 92px);
+    font-style: italic;
+    font-weight: 700;
+    letter-spacing: 2px;
+
+    text-shadow:
+        0 4px 15px rgba(0,0,0,.7),
+        0 0 30px rgba(255,255,255,.25);
+
+    animation: titleFloat 4s ease-in-out infinite;
+}
+
+.home-subtitle {
+    margin: 25px auto 40px;
+
+    max-width: 900px;
+
+    font-size: clamp(15px, 2vw, 22px);
+    font-style: italic;
+    font-weight: 300;
+
+    line-height: 1.8;
+
+    text-shadow:
+        0 2px 8px rgba(0,0,0,.9);
+}
+
+
+/* =========================================================
+   NÚT
+========================================================= */
+
+.home-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.main-btn,
+.tarot-btn {
+    border: 1px solid rgba(255,255,255,.45);
+    color: white;
+
+    cursor: pointer;
+
+    transition: .35s;
+
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+
+    box-shadow:
+        0 10px 30px rgba(0,0,0,.3);
+}
+
+.main-btn {
+    padding: 20px 45px;
+    min-width: 330px;
+
+    border-radius: 25px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(112,35,76,.85),
+            rgba(67,26,70,.8)
+        );
+
+    font-size: 22px;
+}
+
+.tarot-btn {
+    padding: 17px 27px;
+
+    border-radius: 20px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(50,35,82,.9),
+            rgba(29,21,52,.9)
+        );
+
+    font-size: 17px;
+}
+
+.main-btn:hover,
+.tarot-btn:hover {
+    transform: translateY(-5px) scale(1.03);
+
+    box-shadow:
+        0 15px 40px rgba(0,0,0,.5),
+        0 0 30px rgba(255,255,255,.15);
+}
+
+
+/* =========================================================
+   ĐĨA NHẠC
+========================================================= */
+
+.music-player {
+    position: absolute;
+    bottom: 25px;
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    z-index: 20;
+
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    padding: 10px 18px;
+
+    border-radius: 50px;
+
+    background: rgba(20,10,25,.5);
+    backdrop-filter: blur(12px);
+}
+
+.record {
+    width: 55px;
+    height: 55px;
+
+    border-radius: 50%;
+
+    background:
+        repeating-radial-gradient(
+            circle,
+            #171717 0px,
+            #171717 3px,
+            #292929 4px,
+            #111 6px
+        );
+
+    border: 3px solid #6e6171;
+
+    position: relative;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 0 20px rgba(255,255,255,.2);
+}
+
+.record::after {
+    content: "";
+    position: absolute;
+
+    width: 13px;
+    height: 13px;
+
+    background: #c79a58;
+
+    border-radius: 50%;
+
+    top: 50%;
+    left: 50%;
+
+    transform: translate(-50%, -50%);
+}
+
+.record.playing {
+    animation: spin 3s linear infinite;
+}
+
+.music-text {
+    font-size: 13px;
+    opacity: .8;
+}
+
+
+/* =========================================================
+   TAROT
+========================================================= */
+
+#tarot {
+    min-height: 100vh;
+
+    padding: 60px 5%;
+
+    background:
+        radial-gradient(
+            circle at 20% 20%,
+            rgba(116,62,145,.3),
+            transparent 30%
+        ),
+        radial-gradient(
+            circle at 80% 70%,
+            rgba(43,74,121,.25),
+            transparent 30%
+        ),
+        #120d1c;
+}
+
+.section-title {
+    text-align: center;
+
+    font-size: clamp(36px, 5vw, 65px);
+    font-style: italic;
+
+    margin-bottom: 15px;
+}
+
+.section-description {
+    text-align: center;
+
+    opacity: .75;
+
+    margin-bottom: 45px;
+}
+
+.tarot-container {
+    width: min(1000px, 100%);
+    margin: auto;
+}
+
+.choice-box {
+    padding: 30px;
+
+    background: rgba(255,255,255,.06);
+
+    border:
+        1px solid rgba(255,255,255,.15);
+
+    border-radius: 30px;
+
+    backdrop-filter: blur(20px);
+}
+
+.choice-title {
+    font-size: 22px;
+    margin-bottom: 18px;
+}
+
+.option-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 30px;
+}
+
+.option {
+    padding: 12px 20px;
+
+    border-radius: 30px;
+
+    border: 1px solid rgba(255,255,255,.2);
+
+    color: white;
+
+    background: rgba(255,255,255,.07);
+
+    cursor: pointer;
+
+    transition: .3s;
+}
+
+.option:hover {
+    background: rgba(255,255,255,.15);
+}
+
+.option.selected {
+    background:
+        linear-gradient(
+            135deg,
+            #8b4e87,
+            #4d396f
+        );
+
+    box-shadow:
+        0 0 20px rgba(174,116,191,.4);
+}
+
+
+/* =========================================================
+   TAROT CARDS
+========================================================= */
+
+.card-selection {
+    margin-top: 40px;
+}
+
+.tarot-cards {
+    display: grid;
+
+    grid-template-columns:
+        repeat(auto-fit, minmax(100px, 1fr));
+
+    gap: 18px;
+
+    margin-top: 25px;
+}
+
+.tarot-card {
+    height: 170px;
+
+    border-radius: 14px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #301e47,
+            #160f27
+        );
+
+    border:
+        1px solid rgba(255,255,255,.2);
+
+    cursor: pointer;
+
+    position: relative;
+
+    transition: .4s;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    text-align: center;
+}
+
+.tarot-card::before {
+    content: "✦";
+
+    font-size: 35px;
+
+    opacity: .7;
+}
+
+.tarot-card:hover {
+    transform:
+        translateY(-10px)
+        rotateY(10deg);
+
+    box-shadow:
+        0 15px 30px rgba(0,0,0,.5);
+}
+
+.tarot-card.selected {
+    border:
+        2px solid #e4c17d;
+
+    box-shadow:
+        0 0 25px rgba(228,193,125,.5);
+
+    transform: translateY(-12px);
+}
+
+.tarot-result {
+    margin-top: 45px;
+}
+
+.result-card {
+    padding: 30px;
+
+    margin: 20px 0;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(122,73,130,.2),
+            rgba(39,40,81,.3)
+        );
+
+    border:
+        1px solid rgba(255,255,255,.15);
+
+    border-radius: 25px;
+}
+
+.result-card h3 {
+    color: #e9c887;
+
+    font-size: 25px;
+
+    margin-bottom: 10px;
+}
+
+.conclusion {
+    padding: 30px;
+
+    margin-top: 30px;
+
+    border-radius: 25px;
+
+    background:
+        rgba(220,180,110,.08);
+
+    border:
+        1px solid rgba(220,180,110,.25);
+
+    line-height: 1.8;
+}
+
+
+/* =========================================================
+   TRỒNG NHO
+========================================================= */
+
+#growing {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    text-align: center;
+
+    padding: 30px;
+
+    background:
+        linear-gradient(
+            rgba(24,12,28,.65),
+            rgba(24,12,28,.85)
+        ),
+        url("assets/background.jpg");
+
+    background-size: cover;
+    background-position: center;
+}
+
+.growing-box {
+    width: min(700px, 90%);
+
+    padding: 45px;
+
+    border-radius: 35px;
+
+    background: rgba(30,15,35,.55);
+
+    backdrop-filter: blur(20px);
+
+    border:
+        1px solid rgba(255,255,255,.2);
+
+    box-shadow:
+        0 25px 80px rgba(0,0,0,.5);
+}
+
+.growing-title {
+    font-size: clamp(28px, 5vw, 48px);
+
+    font-style: italic;
+
+    margin-bottom: 25px;
+}
+
+.progress-wrapper {
+    width: 100%;
+
+    height: 20px;
+
+    background: rgba(255,255,255,.12);
+
+    border-radius: 30px;
+
+    overflow: hidden;
+
+    margin: 30px 0 12px;
+}
+
+.progress-bar {
+    height: 100%;
+
+    width: 0%;
+
+    border-radius: 30px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #6f9a56,
+            #b8c85c,
+            #e1c77b
+        );
+
+    transition: width .15s;
+}
+
+.progress-number {
+    opacity: .7;
+}
+
+.grow-buttons {
+    margin-top: 35px;
+
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+}
+
+.harvest-btn {
+    padding: 17px 35px;
+
+    border: 0;
+
+    border-radius: 20px;
+
+    cursor: pointer;
+
+    color: white;
+
+    background:
+        linear-gradient(
+            135deg,
+            #8d4777,
+            #5b326a
+        );
+
+    font-size: 19px;
+}
+
+.reload-btn {
+    padding: 13px 20px;
+
+    border-radius: 18px;
+
+    cursor: pointer;
+
+    color: white;
+
+    background: rgba(255,255,255,.08);
+
+    border:
+        1px solid rgba(255,255,255,.2);
+}
+
+
+/* =========================================================
+   VƯỜN NHO
+========================================================= */
+
+#garden {
+    min-height: 100vh;
+
+    padding: 50px 4%;
+
+    background:
+        radial-gradient(
+            circle at top,
+            rgba(100,55,90,.4),
+            transparent 35%
+        ),
+        #140d17;
+}
+
+.garden-header {
+    text-align: center;
+
+    margin-bottom: 45px;
+}
+
+.garden-header h1 {
+    font-size: clamp(35px, 5vw, 65px);
+
+    font-style: italic;
+}
+
+.random-grape {
+    width: min(700px, 100%);
+
+    margin: 25px auto 0;
+
+    padding: 22px;
+
+    border-radius: 25px;
+
+    border:
+        1px solid rgba(255,255,255,.2);
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(116,61,92,.65),
+            rgba(51,39,70,.65)
+        );
+
+    color: white;
+
+    cursor: pointer;
+
+    font-size: 21px;
+
+    transition: .3s;
+}
+
+.random-grape:hover {
+    transform: scale(1.02);
+
+    box-shadow:
+        0 15px 35px rgba(0,0,0,.4);
+}
+
+
+/* =========================================================
+   PROFILE
+========================================================= */
+
+.profile-grid {
+    width: min(1400px, 100%);
+
+    margin: 50px auto;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(5, 1fr);
+
+    gap: 25px;
+}
+
+.profile {
+    cursor: pointer;
+
+    padding: 12px;
+
+    border-radius: 25px;
+
+    background:
+        rgba(255,255,255,.055);
+
+    border:
+        1px solid rgba(255,255,255,.1);
+
+    transition: .35s;
+}
+
+.profile:hover {
+    transform: translateY(-8px);
+
+    background:
+        rgba(255,255,255,.1);
+
+    box-shadow:
+        0 20px 40px rgba(0,0,0,.35);
+}
+
+.profile-image {
+    width: 100%;
+
+    aspect-ratio: 3 / 4;
+
+    object-fit: cover;
+
+    border-radius: 19px;
+}
+
+.profile-name {
+    margin-top: 12px;
+
+    font-size: 18px;
+
+    font-weight: bold;
+}
+
+.profile-tag {
+    margin-top: 5px;
+
+    font-size: 12px;
+
+    opacity: .65;
+}
+
+.profile-likes {
+    margin-top: 10px;
+
+    color: #e7a4b7;
+}
+
+
+/* =========================================================
+   TRANG NHÂN VẬT
+========================================================= */
+
+#character-page {
+    min-height: 100vh;
+
+    position: relative;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    padding: 60px 20px;
+
+    overflow: hidden;
+}
+
+.character-bg {
+    position: absolute;
+
+    inset: -30px;
+
+    background-size: cover;
+    background-position: center;
+
+    filter:
+        blur(18px)
+        brightness(.45);
+
+    transform: scale(1.1);
+
+    z-index: 0;
+}
+
+.character-content {
+    position: relative;
+
+    z-index: 2;
+
+    width: min(1000px, 95%);
+
+    padding: 40px;
+
+    border-radius: 35px;
+
+    background:
+        rgba(25,15,29,.55);
+
+    border:
+        1px solid rgba(255,255,255,.2);
+
+    backdrop-filter: blur(25px);
+
+    box-shadow:
+        0 30px 100px rgba(0,0,0,.6);
+}
+
+.character-main {
+    display: grid;
+
+    grid-template-columns:
+        300px 1fr;
+
+    gap: 35px;
+
+    align-items: center;
+}
+
+.character-main-image {
+    width: 100%;
+
+    border-radius: 25px;
+
+    object-fit: cover;
+
+    box-shadow:
+        0 20px 40px rgba(0,0,0,.5);
+}
+
+.character-info h1 {
+    font-size: 45px;
+
+    font-style: italic;
+
+    margin-bottom: 8px;
+}
+
+.character-tag {
+    color: #d9ae78;
+
+    margin-bottom: 20px;
+}
+
+.character-description {
+    line-height: 1.8;
+
+    opacity: .85;
+}
+
+.character-actions {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 12px;
+
+    margin-top: 30px;
+}
+
+.character-actions button,
+.character-actions a {
+    text-decoration: none;
+
+    color: white;
+
+    padding: 13px 20px;
+
+    border-radius: 18px;
+
+    background:
+        rgba(255,255,255,.08);
+
+    border:
+        1px solid rgba(255,255,255,.2);
+
+    cursor: pointer;
+
+    transition: .3s;
+}
+
+.character-actions button:hover,
+.character-actions a:hover {
+    background:
+        rgba(255,255,255,.17);
+
+    transform: translateY(-3px);
+}
+
+.heart-button.liked {
+    color: #ff9bb5;
+
+    background:
+        rgba(255,100,140,.15);
+}
+
+.feedback-area {
+    margin-top: 30px;
+
+    padding-top: 25px;
+
+    border-top:
+        1px solid rgba(255,255,255,.1);
+}
+
+.feedback-area textarea {
+    width: 100%;
+
+    min-height: 100px;
+
+    padding: 15px;
+
+    border-radius: 15px;
+
+    border: 1px solid rgba(255,255,255,.15);
+
+    background: rgba(0,0,0,.2);
+
+    color: white;
+
+    resize: vertical;
+}
+
+.feedback-buttons {
+    margin-top: 10px;
+
+    display: flex;
+
+    gap: 10px;
+}
+
+.back-button {
+    position: fixed;
+
+    top: 25px;
+    left: 25px;
+
+    z-index: 50;
+
+    padding: 12px 20px;
+
+    border-radius: 20px;
+
+    border: 1px solid rgba(255,255,255,.2);
+
+    background: rgba(20,10,25,.6);
+
+    color: white;
+
+    cursor: pointer;
+
+    backdrop-filter: blur(10px);
+}
+
+
+/* =========================================================
+   HIỆU ỨNG
+========================================================= */
+
+@keyframes spin {
+    from {
+        transform: rotate(0);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes titleFloat {
+
+    0%,100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-8px);
+    }
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media(max-width: 1100px) {
+
+    .profile-grid {
+        grid-template-columns:
+            repeat(4, 1fr);
+    }
+
+}
+
+@media(max-width: 800px) {
+
+    .profile-grid {
+        grid-template-columns:
+            repeat(3, 1fr);
+    }
+
+    .character-main {
+        grid-template-columns: 1fr;
+    }
+
+    .character-main-image {
+        max-width: 300px;
+        margin: auto;
+    }
+
+}
+
+@media(max-width: 550px) {
+
+    .home-buttons {
+        flex-direction: column;
+    }
+
+    .main-btn {
+        min-width: 0;
+        width: 100%;
+    }
+
+    .tarot-btn {
+        width: 100%;
+    }
+
+    .profile-grid {
+        grid-template-columns:
+            repeat(2, 1fr);
+
+        gap: 14px;
+    }
+
+    .character-content {
+        padding: 25px 18px;
+    }
+
+}
+
+</style>
+</head>
+
+
+<body>
+
+<div id="app">
+
+
+<!-- =====================================================
+     TRANG MỞ ĐẦU
+===================================================== -->
+
+<section id="home" class="screen">
+
+    <div class="home-content">
+
+        <h1 class="home-title">
+            Chào Mừng Bạn Đến Với<br>
+            Vườn Nho Của Cáo
+        </h1>
+
+        <p class="home-subtitle">
+            Mong cuộc đời của tôi và bạn đều rực rỡ gấm hoa,
+            cơm nóng đợi bàn, người thương đợi cửa,
+            hồng trải đường đời, viên mãn hạnh phúc.
+        </p>
+
+        <div class="home-buttons">
+
+            <button
+                class="main-btn"
+                onclick="startGrowing()">
+
+                🍇 Tham Quan Vườn Nho Nào~
+
+            </button>
+
+            <button
+                class="tarot-btn"
+                onclick="openTarot()">
+
+                ✦ Tarot
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- MUSIC -->
+
+    <div class="music-player">
+
+        <div
+            id="record"
+            class="record"
+            onclick="toggleMusic()">
+        </div>
+
+        <span class="music-text">
+            Nhấn vào đĩa để phát nhạc ♫
+        </span>
+
+    </div>
+
+
+    <audio id="music" loop>
+
+        <source
+            src="assets/music.mp3"
+            type="audio/mpeg">
+
+    </audio>
+
+</section>
+
+
+
+<!-- =====================================================
+     TAROT
+===================================================== -->
+
+<section
+    id="tarot"
+    class="screen hidden">
+
+    <button
+        class="back-button"
+        onclick="goHome()">
+
+        ← Quay lại
+
+    </button>
+
+
+    <h1 class="section-title">
+        ✦ Vườn Tarot Của Cáo ✦
+    </h1>
+
+    <p class="section-description">
+        Chọn số lá bài và điều bạn muốn gửi gắm.
+    </p>
+
+
+    <div class="tarot-container">
+
+        <div class="choice-box">
+
+            <h2 class="choice-title">
+                Bạn muốn xem bao nhiêu lá?
+            </h2>
+
+            <div class="option-grid">
+
+                <button
+                    class="option"
+                    onclick="chooseNumber(1,this)">
+                    1 lá
+                </button>
+
+                <button
+                    class="option"
+                    onclick="chooseNumber(3,this)">
+                    3 lá
+                </button>
+
+                <button
+                    class="option"
+                    onclick="chooseNumber(5,this)">
+                    5 lá
+                </button>
+
+            </div>
+
+
+            <h2 class="choice-title">
+                Bạn muốn xem về điều gì?
+            </h2>
+
+            <div class="option-grid">
+
+                <button
+                    class="option"
+                    onclick="chooseTopic('Học tập',this)">
+                    📚 Học tập
+                </button>
+
+                <button
+                    class="option"
+                    onclick="chooseTopic('Công việc',this)">
+                    💼 Công việc
+                </button>
+
+                <button
+                    class="option"
+                    onclick="chooseTopic('Gia đình',this)">
+                    🏡 Gia đình
+                </button>
+
+                <button
+                    class="option"
+                    onclick="chooseTopic('Tình cảm',this)">
+                    💗 Tình cảm
+                </button>
+
+                <button
+                    class="option"
+                    onclick="chooseTopic('Tiền bạc',this)">
+                    💰 Tiền bạc
+                </button>
+
+                <button
+                    class="option"
+                    onclick="chooseTopic('Bạn bè',this)">
+                    🫂 Bạn bè
+                </button>
+
+            </div>
+
+
+            <!-- CHỌN BÀI -->
+
+            <div
+                id="card-selection"
+                class="card-selection hidden">
+
+                <h2 class="choice-title">
+                    Chọn những lá bài dành cho bạn
+                </h2>
+
+                <p style="opacity:.65">
+                    Hãy chọn đúng số lá bạn đã chọn ở trên.
+                </p>
+
+                <div
+                    id="tarot-cards"
+                    class="tarot-cards">
+                </div>
+
+            </div>
+
+
+            <!-- KẾT QUẢ -->
+
+            <div
+                id="tarot-result"
+                class="tarot-result hidden">
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     TRỒNG NHO
+===================================================== -->
+
+<section
+    id="growing"
+    class="screen hidden">
+
+    <div class="growing-box">
+
+        <div class="growing-title">
+
+            🦊 Cáo đang nỗ lực trồng nho...
+
+        </div>
+
+        <p>
+            Xin hãy kiên nhẫn một chút nhé.
+            Những chùm nho đang lớn lên từng chút một...
+        </p>
+
+
+        <div class="progress-wrapper">
+
+            <div
+                id="progress-bar"
+                class="progress-bar">
+            </div>
+
+        </div>
+
+        <div
+            id="progress-number"
+            class="progress-number">
+
+            0%
+
+        </div>
+
+
+        <div
+            id="grow-buttons"
+            class="grow-buttons hidden">
+
+            <button
+                class="harvest-btn"
+                onclick="openGarden()">
+
+                🍇 Hái Nho Thôi
+
+            </button>
+
+            <button
+                class="reload-btn"
+                onclick="restartGrowing()">
+
+                ↻ Tải lại
+
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     VƯỜN NHO
+===================================================== -->
+
+<section
+    id="garden"
+    class="screen hidden">
+
+    <button
+        class="back-button"
+        onclick="goHome()">
+
+        ← Về trang đầu
+
+    </button>
+
+
+    <div class="garden-header">
+
+        <h1>
+            🍇 Vườn Nho Của Cáo
+        </h1>
+
+        <p style="opacity:.65; margin-top:10px;">
+            Nơi những câu chuyện đang chờ được hái xuống.
+        </p>
+
+
+        <button
+            class="random-grape"
+            onclick="randomCharacter()">
+
+            🍇 Hôm nay bạn muốn ăn nho gì?
+
+        </button>
+
+    </div>
+
+
+    <div
+        id="profile-grid"
+        class="profile-grid">
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     TRANG NHÂN VẬT
+===================================================== -->
+
+<section
+    id="character-page"
+    class="screen hidden">
+
+    <div
+        id="character-bg"
+        class="character-bg">
+    </div>
+
+
+    <button
+        class="back-button"
+        onclick="openGarden()">
+
+        ← Về vườn nho
+
+    </button>
+
+
+    <div class="character-content">
+
+        <div class="character-main">
+
+            <img
+                id="character-image"
+                class="character-main-image"
+                src=""
+                alt="Nhân vật">
+
+
+            <div class="character-info">
+
+                <h1 id="character-name">
+                    -
+                </h1>
+
+                <div
+                    id="character-tag"
+                    class="character-tag">
+                </div>
+
+                <p
+                    id="character-description"
+                    class="character-description">
+                </p>
+
+
+                <div class="character-actions">
+
+                    <button
+                        onclick="openPlot()">
+
+                        📖 Đọc Plot
+
+                    </button>
+
+
+                    <a
+                        id="grape-link"
+                        href="#"
+                        target="_blank">
+
+                        🍇 Hái Nho
+
+                    </a>
+
+
+                    <button
+                        id="heart-button"
+                        class="heart-button"
+                        onclick="likeCharacter()">
+
+                        ♡ <span id="heart-count">0</span>
+
+                    </button>
+
+                </div>
+
+
+                <div class="feedback-area">
+
+                    <p style="margin-bottom:10px;">
+                        Gửi một chút lời nhắn cho Cáo 💌
+                    </p>
+
+                    <textarea
+                        id="feedback"
+                        placeholder="Viết điều bạn muốn nói...">
+                    </textarea>
+
+
+                    <div class="feedback-buttons">
+
+                        <button
+                            onclick="sendPublicFeedback()">
+
+                            💬 Feedback công khai
+
+                        </button>
+
+                        <button
+                            onclick="sendPrivateFeedback()">
+
+                            🦊 Nhắn riêng với Cáo
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+</div>
+
+
+
+<script>
+
+/* =========================================================
+   DỮ LIỆU NHÂN VẬT
+========================================================= */
+
+const characters = [
+
+    {
+        id: 1,
+        name: "Nhân Vật 01",
+        tag: "#mộng_mơ",
+        image: "assets/char1.jpg",
+        description:
+            "Một câu chuyện nhỏ đang chờ bạn mở ra. Hãy hái chùm nho này và bước vào thế giới của nhân vật.",
+        plot: "plots/char1.html",
+        grape:
+            "https://studio.google.com/"
+    },
+
+    {
+        id: 2,
+        name: "Nhân Vật 02",
+        tag: "#ngọt_ngào",
+        image: "assets/char2.jpg",
+        description:
+            "Một người mang theo những bí mật dịu dàng dưới ánh hoàng hôn.",
+        plot: "plots/char2.html",
+        grape:
+            "https://studio.google.com/"
+    },
+
+    {
+        id: 3,
+        name: "Nhân Vật 03",
+        tag: "#cổ_phong",
+        image: "assets/char3.jpg",
+        description:
+            "Có những cuộc gặp gỡ tưởng như tình cờ nhưng lại được viết sẵn từ rất lâu.",
+        plot: "plots/char3.html",
+        grape:
+            "https://studio.google.com/"
+    },
+
+    {
+        id: 4,
+        name: "Nhân Vật 04",
+        tag: "#ngược",
+        image: "assets/char4.jpg",
+        description:
+            "Một câu chuyện bắt đầu bằng khoảng cách và những điều chưa thể nói thành lời.",
+        plot: "plots/char4.html",
+        grape:
+            "https://studio.google.com/"
+    },
+
+    {
+        id: 5,
+        name: "Nhân Vật 05",
+        tag: "#chữa_lành",
+        image: "assets/char5.jpg",
+        description:
+            "Nếu đã mệt rồi, hãy ngồi xuống đây một lát.",
+        plot: "plots/char5.html",
+        grape:
+            "https://studio.google.com/"
+    },
+
+    {
+        id: 6,
+        name: "Nhân Vật 06",
+        tag: "#bí_ẩn",
+        image: "assets/char6.jpg",
+        description:
+            "Một ánh mắt, một lời hứa và một bí mật chưa từng được hé lộ.",
+        plot: "plots/char6.html",
+        grape:
+            "https://studio.google.com/"
+    },
+
+    {
+        id: 7,
+        name: "Nhân Vật 07",
+        tag: "#thanh_xuân",
+        image: "assets/char7.jpg",
+        description:
+            "Có người chỉ xuất hiện một lần nhưng khiến cả mùa hè trở nên đáng nhớ.",
+        plot: "plots/char7.html",
+        grape:
+            "https://studio.google.com/"
+    },
+
+    {
+        id: 8,
+        name: "Nhân Vật 08",
+        tag: "#fantasy",
+        image: "assets/char8.jpg",
+        description:
+            "Một thế giới khác, nơi những điều kỳ diệu vẫn còn tồn tại.",
+        plot: "plots/char8.html",
+        grape:
+            "https://studio.google.com/"
+    },
+
+    {
+        id: 9,
+        name: "Nhân Vật 09",
+        tag: "#romance",
+        image: "assets/char9.jpg",
+        description:
+            "Một câu chuyện tình dịu dàng giữa những ngày đầy nắng.",
+        plot: "plots/char9.html",
+        grape:
+            "https://studio.google.com/"
+    },
+
+    {
+        id: 10,
+        name: "Nhân Vật 10",
+        tag: "#định_mệnh",
+        image: "assets/char10.jpg",
+        description:
+            "Nếu hai người vốn thuộc về nhau, liệu có con đường nào đủ dài để chia cách?",
+        plot: "plots/char10.html",
+        grape:
+            "https://studio.google.com/"
+    }
+
+];
+
+
+/* =========================================================
+   DỮ LIỆU TAROT
+========================================================= */
+
+const tarotDeck = [
+
+    {
+        name: "The Fool",
+        meaning:
+            "Một khởi đầu mới, lòng can đảm và việc bước ra khỏi vùng an toàn."
+    },
+
+    {
+        name: "The Magician",
+        meaning:
+            "Bạn đang có nhiều năng lực hơn mình nghĩ. Đây là lúc biến ý tưởng thành hành động."
+    },
+
+    {
+        name: "The High Priestess",
+        meaning:
+            "Hãy lắng nghe trực giác. Có những điều chưa được nói ra nhưng bạn đã cảm nhận được."
+    },
+
+    {
+        name: "The Empress",
+        meaning:
+            "Sự phát triển, chăm sóc, sáng tạo và những điều tốt đẹp đang dần nảy mầm."
+    },
+
+    {
+        name: "The Emperor",
+        meaning:
+            "Kỷ luật, trách nhiệm và khả năng xây dựng một nền tảng vững chắc."
+    },
+
+    {
+        name: "The Lovers",
+        meaning:
+            "Một lựa chọn quan trọng liên quan đến tình cảm, sự gắn kết hoặc giá trị cá nhân."
+    },
+
+    {
+        name: "The Chariot",
+        meaning:
+            "Tiến về phía trước bằng quyết tâm. Đừng để những điều bên ngoài làm bạn mất phương hướng."
+    },
+
+    {
+        name: "Strength",
+        meaning:
+            "Sức mạnh thật sự đến từ sự kiên nhẫn, lòng nhân ái và khả năng kiểm soát bản thân."
+    },
+
+    {
+        name: "The Hermit",
+        meaning:
+            "Một khoảng lặng cần thiết để suy nghĩ, nhìn lại và tìm câu trả lời bên trong."
+    },
+
+    {
+        name: "Wheel of Fortune",
+        meaning:
+            "Một chu kỳ đang thay đổi. Những điều bất ngờ có thể mở ra hướng đi mới."
+    },
+
+    {
+        name: "Justice",
+        meaning:
+            "Cân bằng, trách nhiệm và nhìn nhận mọi chuyện một cách rõ ràng."
+    },
+
+    {
+        name: "The Star",
+        meaning:
+            "Hy vọng, chữa lành và niềm tin rằng những điều tốt đẹp vẫn còn phía trước."
+    }
+
+];
+
+
+/* =========================================================
+   BIẾN
+========================================================= */
+
+let selectedNumber = null;
+
+let selectedTopic = null;
+
+let selectedCards = [];
+
+let currentCharacter = null;
+
+let progressInterval = null;
+
+
+/* =========================================================
+   CHUYỂN TRANG
+========================================================= */
+
+function hideAll() {
+
+    document
+        .querySelectorAll(".screen")
+        .forEach(screen => {
+
+            screen.classList.add("hidden");
+
+        });
+
+}
+
+
+function goHome() {
+
+    hideAll();
+
+    document
+        .getElementById("home")
+        .classList.remove("hidden");
+
+}
+
+
+/* =========================================================
+   NHẠC
+========================================================= */
+
+function toggleMusic() {
+
+    const music =
+        document.getElementById("music");
+
+    const record =
+        document.getElementById("record");
+
+
+    if (music.paused) {
+
+        music.play();
+
+        record.classList.add("playing");
+
+    }
+
+    else {
+
+        music.pause();
+
+        record.classList.remove("playing");
+
+    }
+
+}
+
+
+/* =========================================================
+   TRỒNG NHO
+========================================================= */
+
+function startGrowing() {
+
+    hideAll();
+
+    document
+        .getElementById("growing")
+        .classList.remove("hidden");
+
+    restartGrowing();
+
+}
+
+
+function restartGrowing() {
+
+    clearInterval(progressInterval);
+
+    let progress = 0;
+
+    const bar =
+        document.getElementById("progress-bar");
+
+    const number =
+        document.getElementById("progress-number");
+
+    const buttons =
+        document.getElementById("grow-buttons");
+
+
+    bar.style.width = "0%";
+
+    number.innerText = "0%";
+
+    buttons.classList.add("hidden");
+
+
+    progressInterval =
+        setInterval(() => {
+
+            progress += Math.random() * 2.5;
+
+            if (progress >= 100) {
+
+                progress = 100;
+
+                clearInterval(progressInterval);
+
+                buttons.classList.remove("hidden");
+
+            }
+
+            bar.style.width =
+                progress + "%";
+
+            number.innerText =
+                Math.floor(progress) + "%";
+
+        }, 100);
+
+}
+
+
+function openGarden() {
+
+    clearInterval(progressInterval);
+
+    hideAll();
+
+    document
+        .getElementById("garden")
+        .classList.remove("hidden");
+
+    renderProfiles();
+
+}
+
+
+/* =========================================================
+   PROFILE
+========================================================= */
+
+function renderProfiles() {
+
+    const grid =
+        document.getElementById("profile-grid");
+
+    grid.innerHTML = "";
+
+
+    characters.forEach(character => {
+
+        const profile =
+            document.createElement("div");
+
+        profile.className = "profile";
+
+
+        const likes =
+            localStorage.getItem(
+                "likes_" + character.id
+            ) || 0;
+
+
+        profile.innerHTML = `
+
+            <img
+                class="profile-image"
+                src="${character.image}"
+                alt="${character.name}">
+
+            <div class="profile-name">
+                ${character.name}
+            </div>
+
+            <div class="profile-tag">
+                ${character.tag}
+            </div>
+
+            <div class="profile-likes">
+                ♡ ${likes}
+            </div>
+
+        `;
+
+
+        profile.onclick =
+            () => openCharacter(character.id);
+
+
+        grid.appendChild(profile);
+
+    });
+
+}
+
+
+/* =========================================================
+   RANDOM NHO
+========================================================= */
+
+function randomCharacter() {
+
+    const random =
+        characters[
+            Math.floor(
+                Math.random() * characters.length
+            )
+        ];
+
+    openCharacter(random.id);
+
+}
+
+
+/* =========================================================
+   TRANG NHÂN VẬT
+========================================================= */
+
+function openCharacter(id) {
+
+    const character =
+        characters.find(
+            item => item.id === id
+        );
+
+    if (!character) return;
+
+
+    currentCharacter = character;
+
+
+    hideAll();
+
+    document
+        .getElementById("character-page")
+        .classList.remove("hidden");
+
+
+    document
+        .getElementById("character-bg")
+        .style.backgroundImage =
+            `url("${character.image}")`;
+
+
+    document
+        .getElementById("character-image")
+        .src =
+            character.image;
+
+
+    document
+        .getElementById("character-name")
+        .innerText =
+            character.name;
+
+
+    document
+        .getElementById("character-tag")
+        .innerText =
+            character.tag;
+
+
+    document
+        .getElementById("character-description")
+        .innerText =
+            character.description;
+
+
+    document
+        .getElementById("grape-link")
+        .href =
+            character.grape;
+
+
+    updateHeart();
+
+}
+
+
+/* =========================================================
+   TIM
+========================================================= */
+
+function likeCharacter() {
+
+    if (!currentCharacter) return;
+
+
+    const key =
+        "liked_" +
+        currentCharacter.id;
+
+
+    const alreadyLiked =
+        localStorage.getItem(key);
+
+
+    if (alreadyLiked) {
+
+        alert(
+            "Bạn đã thả tim cho nhân vật này rồi ♡"
+        );
+
+        return;
+
+    }
+
+
+    const likeKey =
+        "likes_" +
+        currentCharacter.id;
+
+
+    let count =
+        Number(
+            localStorage.getItem(likeKey) || 0
+        );
+
+
+    count++;
+
+
+    localStorage.setItem(
+        likeKey,
+        count
+    );
+
+
+    localStorage.setItem(
+        key,
+        "true"
+    );
+
+
+    updateHeart();
+
+}
+
+
+function updateHeart() {
+
+    if (!currentCharacter) return;
+
+
+    const count =
+        localStorage.getItem(
+            "likes_" +
+            currentCharacter.id
+        ) || 0;
+
+
+    document
+        .getElementById("heart-count")
+        .innerText =
+            count;
+
+
+    const button =
+        document.getElementById(
+            "heart-button"
+        );
+
+
+    if (
+        localStorage.getItem(
+            "liked_" +
+            currentCharacter.id
+        )
+    ) {
+
+        button.classList.add("liked");
+
+        button.innerHTML =
+            "♥ <span id='heart-count'>" +
+            count +
+            "</span>";
+
+    }
+
+}
+
+
+/* =========================================================
+   PLOT
+========================================================= */
+
+function openPlot() {
+
+    if (!currentCharacter) return;
+
+
+    window.open(
+        currentCharacter.plot,
+        "_blank"
+    );
+
+}
+
+
+/* =========================================================
+   FEEDBACK
+========================================================= */
+
+function sendPublicFeedback() {
+
+    const text =
+        document
+            .getElementById("feedback")
+            .value
+            .trim();
+
+
+    if (!text) {
+
+        alert(
+            "Hãy viết một chút gì đó trước nhé ♡"
+        );
+
+        return;
+
+    }
+
+
+    alert(
+        "Feedback công khai đã được ghi nhận!\n\n" +
+        text
+    );
+
+}
+
+
+function sendPrivateFeedback() {
+
+    const text =
+        document
+            .getElementById("feedback")
+            .value
+            .trim();
+
+
+    if (!text) {
+
+        alert(
+            "Hãy viết lời nhắn trước nhé ♡"
+        );
+
+        return;
+
+    }
+
+
+    /*
+       THAY URL FACEBOOK CỦA BẠN Ở ĐÂY
+    */
+
+    const facebookURL =
+        "https://www.facebook.com/";
+
+
+    window.open(
+        facebookURL +
+        "?message=" +
+        encodeURIComponent(text),
+        "_blank"
+    );
+
+}
+
+
+/* =========================================================
+   TAROT
+========================================================= */
+
+function openTarot() {
+
+    hideAll();
+
+    document
+        .getElementById("tarot")
+        .classList.remove("hidden");
+
+}
+
+
+function chooseNumber(number, element) {
+
+    selectedNumber = number;
+
+    selectedCards = [];
+
+
+    document
+        .querySelectorAll(
+            ".option"
+        )
+        .forEach(button => {
+
+            /*
+               chỉ bỏ selected trong nhóm số lá
+               và nhóm chủ đề sẽ được xử lý riêng
+            */
+
+        });
+
+
+    const buttons =
+        element
+            .parentElement
+            .querySelectorAll(".option");
+
+
+    buttons.forEach(
+        button =>
+            button.classList.remove("selected")
+    );
+
+
+    element.classList.add("selected");
+
+
+    checkTarotReady();
+
+}
+
+
+function chooseTopic(topic, element) {
+
+    selectedTopic = topic;
+
+
+    const buttons =
+        element
+            .parentElement
+            .querySelectorAll(".option");
+
+
+    buttons.forEach(
+        button =>
+            button.classList.remove("selected")
+    );
+
+
+    element.classList.add("selected");
+
+
+    checkTarotReady();
+
+}
+
+
+function checkTarotReady() {
+
+    if (
+        selectedNumber &&
+        selectedTopic
+    ) {
+
+        createTarotCards();
+
+    }
+
+}
+
+
+/* =========================================================
+   TẠO BÀI TAROT
+========================================================= */
+
+function createTarotCards() {
+
+    const container =
+        document.getElementById(
+            "card-selection"
+        );
+
+
+    const cards =
+        document.getElementById(
+            "tarot-cards"
+        );
+
+
+    container.classList.remove("hidden");
+
+    cards.innerHTML = "";
+
+    selectedCards = [];
+
+
+    tarotDeck.forEach(
+        (card, index) => {
+
+            const element =
+                document.createElement("div");
+
+
+            element.className =
+                "tarot-card";
+
+
+            element.title =
+                "Lá bài " +
+                (index + 1);
+
+
+            element.onclick =
+                () => selectTarotCard(
+                    card,
+                    element
+                );
+
+
+            cards.appendChild(element);
+
+        }
+    );
+
+
+    document
+        .getElementById("tarot-result")
+        .classList.add("hidden");
+
+}
+
+
+/* =========================================================
+   CHỌN TAROT
+========================================================= */
+
+function selectTarotCard(card, element) {
+
+    if (
+        selectedCards.includes(card)
+    ) {
+
+        selectedCards =
+            selectedCards.filter(
+                item => item !== card
+            );
+
+        element.classList.remove(
+            "selected"
+        );
+
+        return;
+
+    }
+
+
+    if (
+        selectedCards.length >=
+        selectedNumber
+    ) {
+
+        alert(
+            "Bạn đã chọn đủ " +
+            selectedNumber +
+            " lá rồi."
+        );
+
+        return;
+
+    }
+
+
+    selectedCards.push(card);
+
+    element.classList.add("selected");
+
+
+    if (
+        selectedCards.length ===
+        selectedNumber
+    ) {
+
+        showTarotResult();
+
+    }
+
+}
+
+
+/* =========================================================
+   KẾT QUẢ TAROT
+========================================================= */
+
+function showTarotResult() {
+
+    const result =
+        document.getElementById(
+            "tarot-result"
+        );
+
+
+    result.classList.remove(
+        "hidden"
+    );
+
+
+    let html = `
+
+        <h2 style="
+            text-align:center;
+            font-size:32px;
+            margin-bottom:20px;
+        ">
+
+            ✦ Trải bài của bạn ✦
+
+        </h2>
+
+        <p style="
+            text-align:center;
+            opacity:.7;
+            margin-bottom:30px;
+        ">
+
+            Chủ đề:
+            <strong>
+                ${selectedTopic}
+            </strong>
+
+        </p>
+
+    `;
+
+
+    selectedCards.forEach(
+        (card, index) => {
+
+            html += `
+
+                <div class="result-card">
+
+                    <h3>
+                        Lá ${index + 1} —
+                        ${card.name}
+                    </h3>
+
+                    <p>
+                        ${card.meaning}
+                    </p>
+
+                </div>
+
+            `;
+
+        }
+    );
+
+
+    html += `
+
+        <div class="conclusion">
+
+            <h3 style="margin-bottom:12px;">
+                🌙 Lời nhắn dành cho bạn
+            </h3>
+
+            <p>
+
+                Với chủ đề
+                <strong>${selectedTopic}</strong>,
+                những lá bài bạn chọn gợi ý rằng
+                điều quan trọng nhất lúc này là
+                lắng nghe chính mình, quan sát
+                những cơ hội đang xuất hiện và
+                chủ động lựa chọn điều phù hợp
+                với bạn.
+
+                <br><br>
+
+                Tarot chỉ mang tính chất
+                tham khảo và giải trí.
+                Người quyết định con đường của
+                mình vẫn luôn là bạn. ♡
+
+            </p>
+
+        </div>
+
+    `;
+
+
+    result.innerHTML = html;
+
+
+    result.scrollIntoView({
+        behavior: "smooth"
+    });
+
+}
+
+</script>
+
+</body>
+</html>
